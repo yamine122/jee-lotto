@@ -4,8 +4,9 @@ import com.lotto.web.domains.LottoBean;
 
 public interface LottoService {
 	public void createLotto(LottoBean param);
-	public String createBall();
+	public int createBall();
 	public String createSeq();
 	public String createLotteryNum();
-	public boolean duplicatePrevention();
+	public boolean exist(int[] arr ,int a);
+	public int[] bubbleSort(int[] arr , boolean flag);
 }

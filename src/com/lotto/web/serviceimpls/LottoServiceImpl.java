@@ -1,8 +1,7 @@
 package com.lotto.web.serviceimpls;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
+
 
 import com.lotto.web.daoimpls.LottoDaoImpl;
 import com.lotto.web.daos.LottoDao;
@@ -17,7 +16,7 @@ public class LottoServiceImpl implements LottoService{
 		}
 	@Override
 	public void createLotto(LottoBean param) {
-		param.setBall(createBall());
+		param.setBall(createBall()+"");
 		param.setLotteryNum(createLotteryNum());
 		param.setLottoSeq(createSeq());
 		
@@ -26,7 +25,7 @@ public class LottoServiceImpl implements LottoService{
 		
 	}
 	@Override
-	public String createBall() {
+	public int createBall() {
 		/*Random r = new Random();
 		String ball ="";
 		for(int i = 0; i < 6; i++) {
@@ -37,56 +36,72 @@ public class LottoServiceImpl implements LottoService{
 				ball += r.nextInt(45)+1+",";
 			}
 		}*/
-		return new Random().nextInt(45)+1+"";
+		return (int)(Math.random() * 45)+1;
 	}
 	@Override
 	public String createSeq() {
 		Random r = new Random();
-		String seq = "";
-		for(int i = 0 ; i < 4; i++) {
-			if(i == 0) {
-				seq = "no."+r.nextInt(10);
-			}else {
-				seq += String.valueOf(r.nextInt(10));
-			}
-		}
-			
-		return seq;
+		  String result = "No.";
+		  for (int i = 0; i < 4; i++) {
+		   result += r.nextInt(9) + "";
+
+		  }
+		return result;
 	}
 	@Override
 	public String createLotteryNum() {
 		String lotteryNum = "";
-			for(int i = 0; i < 6; i++) {
-				if(i == 5) {
-					lotteryNum += createBall();
-					break;
-				}else{
-					lotteryNum += createBall()+",";
+		int[] arr = new int[6];
+			for(int i = 0; i < arr.length; i++) {
+				int a = createBall();
+				if(!exist(arr , a)) {
+					arr[i] = a;
+				}else {
+					i--;
 				}
+			}
+			
+			arr = bubbleSort(arr , true);
+			
+			
+			for(int i = 0; i < arr.length; i++) {
+				
+				lotteryNum += arr[i]+",";
 		}
 		return lotteryNum;
 	}
 	@Override
-	public boolean duplicatePrevention() {
+	public boolean exist(int[] arr , int a) {
 		boolean flag = false;
-		
-		int[] arr = new int[6];
-		for(int i = 0 ; i < arr.length; i++) {
-			arr[i] = i+1;
-		}
-		int temp = 0;
-		int j = 0;
-		for(int i = 0 ; i < 6; i++) {
-			j = (int)(Math.random()*45);
-			temp = arr[i];
-			arr[i] = arr[j];
-			arr[j] = temp;
-			
-			flag = true;
+		for(int i : arr) {
+			if(a == i) {
+				flag = true;
+			}
 		}
 		
 		
 		return flag;
+	}
+	@Override
+	public int[] bubbleSort(int[] arr , boolean flag) {
+		int t = 0;
+		for(int i = 0 ; i < arr.length; i++) {
+			for(i = 0 ; i < arr.length-1; i++) {
+				if(arr[i] >arr[i+1]) {
+					t = arr[i];
+					arr[i] = arr[i+1];
+					arr[i+1] = t;
+				}else {
+					if(arr[i] < arr[i+1]) {
+						t = arr[i];
+						arr[i] = arr[i+1];
+						arr[i+1] = t;
+					}
+				}
+			}
+		}
+	
+		return arr;
 	}
 
 }
